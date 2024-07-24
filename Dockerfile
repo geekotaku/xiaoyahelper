@@ -1,6 +1,6 @@
 FROM node:20-alpine
 
-RUN apk add --no-cache dcron
+RUN apk add --no-cache tzdata dcron
 
 WORKDIR /app
 
