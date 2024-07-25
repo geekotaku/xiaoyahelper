@@ -1,7 +1,10 @@
 const { readFileSync } = require("fs");
 const https = require("https");
-const refresh_token = readFileSync('/data/mytoken.txt', 'utf-8').trimEnd();
-const parent_file_id = readFileSync('/data/temp_transfer_folder_id.txt', 'utf-8').trimEnd();
+const refresh_token = readFileSync("/data/mytoken.txt", "utf-8").trimEnd();
+const parent_file_id = readFileSync(
+  "/data/temp_transfer_folder_id.txt",
+  "utf-8"
+).trimEnd();
 const fetch = async (url, headers, body) => {
   return new Promise((resolve, reject) => {
     const req = https.request(
@@ -11,8 +14,16 @@ const fetch = async (url, headers, body) => {
         headers: Object.assign(headers, { "Content-Type": "application/json" }),
       },
       function (res) {
+        let data = "";
+
         res.on("data", function (chunk) {
-          resolve(JSON.parse(chunk));
+          data += chunk;
+        });
+        res.on("end", function () {
+          resolve(JSON.parse(data));
+        });
+        res.on("error", function (err) {
+          reject(err);
         });
       }
     );
